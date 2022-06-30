@@ -69,6 +69,10 @@ public class KabupatenViewFrame extends JFrame{
                 }
             }
         });
+        tambahButton.addActionListener(e -> {
+            KabupatenInputFrame inputFrame = new KabupatenInputFrame();
+            inputFrame.setVisible(true);
+        });
         isiTable();
         init();
     }
@@ -99,6 +103,11 @@ public class KabupatenViewFrame extends JFrame{
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+        viewTable.removeColumn(viewTable.getColumnModel().getColumn(0));
+        viewTable.getColumnModel().getColumn(0).setWidth(32);
+        viewTable.getColumnModel().getColumn(0).setMaxWidth(32);
+        viewTable.getColumnModel().getColumn(0).setMinWidth(32);
+        viewTable.getColumnModel().getColumn(0).setPreferredWidth(32);
     }
     private JPanel mainPanel;
     private JPanel cariPanel;
