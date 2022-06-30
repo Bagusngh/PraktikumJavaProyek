@@ -8,7 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class KabupatenInputFrame extends JFrame{
+public class KecamatanInputFrame extends JFrame{
     private int id;
 
     public void setId(int id){
@@ -17,7 +17,7 @@ public class KabupatenInputFrame extends JFrame{
 
     public void isiKomponen(){
         Connection c = Koneksi.getConnection();
-        String findSQL = "SELECT * FROM kabupaten WHERE id = ?";
+        String findSQL = "SELECT * FROM kecamatan WHERE id = ?";
         PreparedStatement ps = null;
         try {
             ps = c.prepareStatement(findSQL);
@@ -32,7 +32,7 @@ public class KabupatenInputFrame extends JFrame{
         }
     }
 
-    public KabupatenInputFrame(){
+    public KecamatanInputFrame(){
         batalButton.addActionListener(e -> {
             dispose();
         });
@@ -50,7 +50,7 @@ public class KabupatenInputFrame extends JFrame{
             PreparedStatement ps;
             try {
                 if(id == 0){
-                    String cekSQL = "SELECT * FROM kabupaten WHERE nama = ? AND id != ?";
+                    String cekSQL = "SELECT * FROM kecamatan WHERE nama = ? AND id != ?";
                     ps = c.prepareStatement(cekSQL);
                     ps.setString(1, nama);
                     ps.setInt(2, id);
@@ -59,14 +59,14 @@ public class KabupatenInputFrame extends JFrame{
                         JOptionPane.showMessageDialog(null,
                                 "Data sama sudah ada");
                     } else {
-                        String insertSQL = "INSERT INTO kabupaten VALUES (NULL, ?)";
+                        String insertSQL = "INSERT INTO kecamatan VALUES (NULL, ?)";
                         ps = c.prepareStatement(insertSQL);
                         ps.setString(1, nama);
                         ps.executeUpdate();
                         dispose();
                     }
                 } else {
-                    String updateSQL = "UPDATE kabupaten SET nama = ? WHERE id = ?";
+                    String updateSQL = "UPDATE kecamatan SET nama = ? WHERE id = ?";
                     ps = c.prepareStatement(updateSQL);
                     ps.setString(1, nama);
                     ps.setInt(2, id);
@@ -82,7 +82,7 @@ public class KabupatenInputFrame extends JFrame{
 
     public void init(){
         setContentPane(mainPanel);
-        setTitle("Input Kabupaten");
+        setTitle("Input Kecamatan");
         pack();
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
