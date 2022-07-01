@@ -147,27 +147,28 @@ public class KabupatenViewFrame extends JFrame{
 
     public void isiTable(){
         Connection c = Koneksi.getConnection();
-        String selectSQL = "SELECT * FROM kabupaten";
+        String selectSQL = "SELECT id, nama, DATE_FORMAT(tanggal, '%d-%m-%Y') As Tanggal FROM kabupaten";
         try {
             Statement s = c.createStatement();
             ResultSet rs = s.executeQuery(selectSQL);
-            String header[] = {"Id", "Nama Kabupaten"};
+            String header[] = {"Id", "Nama Kabupaten", "Tanggal"};
             DefaultTableModel dtm = new DefaultTableModel(header,0);
             viewTable.setModel(dtm);
-            Object[] row = new Object[2];
+            Object[] row = new Object[3];
             while (rs.next()) {
                 row[0] = rs.getInt("id");
                 row[1] = rs.getString("nama");
+                row[2] = rs.getString("tanggal");
                 dtm.addRow(row);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
         viewTable.removeColumn(viewTable.getColumnModel().getColumn(0));
-        viewTable.getColumnModel().getColumn(0).setWidth(32);
-        viewTable.getColumnModel().getColumn(0).setMaxWidth(32);
-        viewTable.getColumnModel().getColumn(0).setMinWidth(32);
-        viewTable.getColumnModel().getColumn(0).setPreferredWidth(32);
+//        viewTable.getColumnModel().getColumn(0).setWidth(32);
+//        viewTable.getColumnModel().getColumn(0).setMaxWidth(32);
+//        viewTable.getColumnModel().getColumn(0).setMinWidth(32);
+//        viewTable.getColumnModel().getColumn(0).setPreferredWidth(32);
     }
     private JPanel mainPanel;
     private JPanel cariPanel;

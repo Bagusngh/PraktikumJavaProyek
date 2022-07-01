@@ -1,6 +1,9 @@
 package frame;
 
+import helpers.JasperDataSourceBuilder;
 import helpers.Koneksi;
+import net.sf.jasperreports.engine.*;
+import net.sf.jasperreports.view.JasperViewer;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -108,6 +111,45 @@ public class KecamatanViewFrame extends JFrame{
             inputFrame.isiKomponen();
             inputFrame.setVisible(true);
         });
+        cetakButton.addActionListener(e -> {
+            Connection c = Koneksi.getConnection();
+            String selectSQL = "SELECT * FROM kecamatan";
+            Object[][] row;
+            try {
+                Statement s = c.createStatement(
+                        ResultSet.TYPE_SCROLL_SENSITIVE,
+                        ResultSet.CONCUR_UPDATABLE);
+                ResultSet rs = s.executeQuery(selectSQL);
+                rs.last();
+                int jumlah = rs.getRow();
+                row = new Object[jumlah][8];
+                int i = 0;
+                rs.beforeFirst();
+                while (rs.next()){
+                    row[i][0] = rs.getInt("id");
+                    row[i][1] = rs.getString("nama");
+                    row[i][2] = rs.getInt("kabupaten_id");
+                    row[i][3] = rs.getString("klasifikasi");
+                    row[i][4] = rs.getInt("populasi");
+                    row[i][5] = rs.getString("luas");
+                    row[i][6] = rs.getString("email");
+                    row[i][7] = rs.getString("tanggalmulai");
+                    i++;
+                }
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+            try {
+                JasperReport jasperReport =
+                        JasperCompileManager.compileReport("D:/Belajar_Latihan/tester/kotlin/PraktikumJavaProyek/src/main/resources/kecamatan_report.jrxml");
+                JasperPrint jasperPrint =
+                        JasperFillManager.fillReport(jasperReport,null, new JasperDataSourceBuilder(row));
+                JasperViewer viewer = new JasperViewer(jasperPrint, false);
+                viewer.setVisible(true);
+            } catch (JRException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
         isiTable();
         init();
     }
@@ -127,7 +169,7 @@ public class KecamatanViewFrame extends JFrame{
         try {
             Statement s = c.createStatement();
             ResultSet rs = s.executeQuery(selectSQL);
-            String[] header = {"Id", "Nama Kecamatan", "Nama Kabupaten", "Klasifikasi", "Populasi", "Luas"};
+            String[] header = {"Id", "Nama Kecamatan", "Nama Kabupaten", "Klasifikasi", "Populasi", "Luas", "email", "tanggalmulai"};
             DefaultTableModel dtm = new DefaultTableModel(header,0);
             viewTable.setModel(dtm);
             viewTable.getColumnModel().getColumn(0).setMaxWidth(32);
@@ -139,7 +181,7 @@ public class KecamatanViewFrame extends JFrame{
             viewTable.getColumnModel().getColumn(4).setCellRenderer(rightRenderer);
             viewTable.getColumnModel().getColumn(5).setCellRenderer(rightRenderer);
 
-            Object[] row = new Object[6];
+            Object[] row = new Object[8];
             while (rs.next()) {
                 NumberFormat nf = NumberFormat.getInstance(Locale.US);
                 String rowPopulasi = nf.format(rs.getInt("populasi"));
@@ -151,6 +193,8 @@ public class KecamatanViewFrame extends JFrame{
                 row[3] = rs.getString("klasifikasi");
                 row[4] = rowPopulasi;
                 row[5] = rowLuas;
+                row[6] = rs.getString("email");
+                row[7] = rs.getString("tanggalmulai");
                 dtm.addRow(row);
             }
         } catch (SQLException e) {
