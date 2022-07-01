@@ -75,6 +75,14 @@ public class KecamatanInputFrame extends JFrame{
                 populasiTextField.requestFocus();
                 return;
             }
+            String email = emailTextField.getText();
+            if(!email.contains("@") || !email.contains(".")){
+                JOptionPane.showMessageDialog(null,
+                        "Isi dengan email valid",
+                        "Validasi email", JOptionPane.WARNING_MESSAGE);
+                emailTextField.requestFocus();
+                return;
+            }
 
             Connection c = Koneksi.getConnection();
             PreparedStatement ps;
@@ -225,5 +233,6 @@ public class KecamatanInputFrame extends JFrame{
     private JTextField populasiTextField;
     private JTextField luasTextField;
     private JLabel luasLabel;
+    private JTextField emailTextField;
     private ButtonGroup klasifikasiButtonGroup;
 }
